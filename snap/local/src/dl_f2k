@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+#
+# Description:
+#   download and prepare foxe for snap
+#
+# Date: Feb 02 2023
+#
+
+set -euo pipefail
+set -x
+
+dlf2k () {
+    wget https://www.firstobject.com/foxe242.zip &> /dev/null
+}
+
+dli7z16x64 () {
+    for dldebs in https://launchpad.net/ubuntu/+source/p7zip/16.02+dfsg-4/+build/13091326/+files/p7zip_16.02+dfsg-4_amd64.deb https://launchpad.net/ubuntu/+source/p7zip/16.02+dfsg-4/+build/13091326/+files/p7zip-full_16.02+dfsg-4_amd64.deb 
+    do
+    wget $dldebs &> /dev/null
+    done
+
+    for pkgdebins in p7zip_16.02+dfsg-4_amd64.deb p7zip-full_16.02+dfsg-4_amd64.deb
+    do
+    sudo apt install ./$pkgdebins -y &> /dev/null
+    rm $pkgdebins
+    done
+}
+
+mkf2k () {
+    mkdir -p ./{wine-runtime,wine-platform,bin} && mkdir -p sommelier/hooks && mkdir -p usr/share/{pixmaps,applications}
+    7z x "foxe242.zip" -o"usr/share/foxe-wine" &> /dev/null
+    mv usr/share/foxe-wine/foxe.exe usr/share/foxe-wine/foxe-wine.exe
+    find "usr" -type d -execdir chmod 755 {} +
+}
+
+mkdsk () {
+    cat > foxe-wine.desktop <<'EOF1'
+[Desktop Entry]
+Name=firstobject XML editor
+GenericName=XML editor
+Comment=Firstobject's free XML editor for Windows is called foxe.
+Keywords=foxe
+Encoding=UTF-8
+Type=Application
+Terminal=false
+Icon=${SNAP}/usr/share/pixmaps/foxe-wine.png
+TryExec=foxe-wine
+Exec=foxe-wine %F
+StartupWMClass=foxe-wine.exe
+Categories=Development,
+MimeType=text/plain;
+EOF1
+}
+
+dlf2k
+dli7z16x64
+mkdsk
+mkf2k
+cp pre-install sommelier/hooks && cp foxe-wine.desktop usr/share/applications && cp foxe-wine.png usr/share/pixmaps && cp -R -p {sommelier,bin,usr,wine-runtime,wine-platform} $SNAPCRAFT_PART_INSTALL

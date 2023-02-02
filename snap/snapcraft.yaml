@@ -1,0 +1,73 @@
+name: foxe-wine
+title: firstobject XML editor (Wine)
+summary: Free XML editor
+description: Firstobject's free XML editor for Windows is called foxe. It loads big files (multi-megabyte) fast and lets you format XML and edit HTML and any loosely formed XML or other markup. The tree view is editable and customizable for useful navigation.
+adopt-info: foxe-wine
+
+confinement: strict
+grade: stable
+architectures:
+  - build-on: amd64
+    run-on: [amd64, i386]
+base: core18
+compression: lzo
+
+plugs:
+  wine-runtime:
+    interface: content
+    target: $SNAP/wine-runtime
+    default-provider: wine-platform-runtime
+  wine-6-staging:
+    interface: content
+    target: $SNAP/wine-platform
+    default-provider: wine-platform-6-staging
+
+environment:
+  WINEDLLOVERRIDES: "mscoree,mshtml="         # Prevent pop-ups about Wine Mono and Wine Gecko
+  WINEARCH: "win32"
+
+apps:
+  foxe-wine:
+    extensions: [ gnome-3-28 ]
+    command: bin/sommelier run-exe
+    environment:
+      RUN_EXE: "$SNAP_USER_DATA/foxe-wine/foxe-wine.exe"
+      SOMMELIER_KEEP_CWD: 1  # Don't change the working directory so relative paths still work
+    plugs:
+      - home
+      - network
+    desktop: usr/share/applications/foxe-wine.desktop
+  # The wine command can be used to run applications inside the wine
+  # environment that this snap uses.
+  #
+  # For example, users can configure the wine environment of this snap
+  # by running `myapp.wine winecfg`.
+  wine:
+    extensions: [ gnome-3-28 ]
+    command: bin/sommelier
+    plugs:
+      - home
+      - network
+
+parts:
+  foxe-wine:
+    plugin: nil
+    source: ./snap/local/src
+    override-build: |
+      snapcraftctl build
+      set -ex
+      snapcraftctl set-version "2.4.2"
+      ./dl_f2k
+    stage:
+      - bin
+      - usr
+      - wine-platform
+      - wine-runtime
+      - sommelier
+    build-packages: [wget]
+  # The sommelier script helps you snap Windows applications using Wine. It
+  # initializes and configures Wine and installs the Windows application.
+  sommelier:
+    plugin: make
+    source: https://github.com/snapcrafters/sommelier-core.git
+    source-branch: "1.0"
