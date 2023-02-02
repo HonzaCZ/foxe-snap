@@ -1,3 +1,5 @@
+[![foxe-wine](https://snapcraft.io/foxe-wine/badge.svg)](https://snapcraft.io/foxe-wine)
+
 <h1 align="center">
   <img src="./snap/local/src/foxe-wine.png" alt="firstobject XML Editor" width="400">
   <br />
@@ -12,8 +14,17 @@
 <p align="right">-- part of official description, <a href="https://www.firstobject.com/dn_editor.htm">https://www.firstobject.com/dn_editor.htm</a></p>
 
 
-## Build
+## Install from the Snap Store
+```shell
+sudo snap install foxe-wine
 ```
+[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-white.svg)](https://snapcraft.io/foxe-wine)
+
+Done!
+
+
+## Optional local build
+```shell
 sudo snap install snapcraft --classic
 git clone https://github.com/HonzaCZ/foxe-snap.git
 cd foxe-snap
@@ -21,8 +32,8 @@ snapcraft
 ```
 
 
-## Install
-```
+## Install local builded snap
+```shell
 sudo snap install --devmode foxe-wine_2.4.2_multi.snap
 ```
 
