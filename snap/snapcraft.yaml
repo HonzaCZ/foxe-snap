@@ -1,7 +1,7 @@
 name: foxe-wine
 title: firstobject XML editor (Wine)
 summary: Free XML editor
-description: Firstobject's free XML editor for Windows is called foxe. It loads big files (multi-megabyte) fast and lets you format XML and edit HTML and any loosely formed XML or other markup. The tree view is editable and customizable for useful navigation.
+description: Firstobject's free XML editor for Windows is called foxe. It loads big files (multi-megabyte) fast and lets you format XML and edit HTML and any loosely formed XML or other markup. The tree view is editable and customizable for useful navigation.  -- part of official description, https://www.firstobject.com/dn_editor.htm
 adopt-info: foxe-wine
 
 confinement: strict
